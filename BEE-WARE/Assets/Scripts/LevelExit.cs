@@ -30,7 +30,7 @@ public class LevelExit : MonoBehaviour
 
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
-        if(currentSceneIndex <= 3 )
+        if(currentSceneIndex <= 4 )
         {   
             FindObjectOfType<Fade>().FadeOut();
             yield return new WaitForSecondsRealtime(levelLoadDelay);
@@ -38,7 +38,7 @@ public class LevelExit : MonoBehaviour
             SceneManager.LoadScene(currentSceneIndex + 1);
             FindObjectOfType<Fade>().FadeIn();
         }
-        else if(currentSceneIndex <= 4)
+        else if(currentSceneIndex <= 5)
         {
             FindObjectOfType<Fade>().FadeOut();
             yield return new WaitForSecondsRealtime(levelLoadDelay);

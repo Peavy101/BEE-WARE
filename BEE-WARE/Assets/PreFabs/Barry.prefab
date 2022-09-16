@@ -4978,6 +4978,7 @@ MonoBehaviour:
   runSpeed: 8
   jumpSpeed: 15
   climbSpeed: 3
+  conveyerSpeed: 6
   deathKick: {x: 3, y: 7}
   oof: {fileID: 8300000, guid: fd1a38e55a9f84c599ae412d2d1aa4da, type: 3}
 --- !u!61 &5384814985506307125

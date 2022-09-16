@@ -41,7 +41,7 @@ public class GameSession : MonoBehaviour
     {
         currentTime = startingTime;
         livesText.text = playerLives.ToString();
-        scoreText.text = score.ToString();
+        scoreText.text = ("");
     }
 
     public void ResetTimer()
@@ -97,6 +97,7 @@ public class GameSession : MonoBehaviour
     public void AddToScore(int pointsToAdd)
     {
         score += pointsToAdd;
+        Debug.Log(score);
         scoreText.text = score.ToString();
     }
 
@@ -117,6 +118,7 @@ public class GameSession : MonoBehaviour
 
     public void ResetGameSession()
     {
+        scoreText.text = ("");
         timerText.text = ("");
         totalScoreText.text = ("");
         scoreSignText.text = ("");

@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 2f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float climbSpeed = 3f;
+    [SerializeField] float conveyerSpeed = 1f;
     [SerializeField] Vector2 deathKick = new Vector2 (10f, 10f);
 
     [SerializeField] AudioClip oof;
@@ -19,7 +20,9 @@ public class PlayerMovement : MonoBehaviour
     Animator myAnimator;
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
+
     float gravityScaleAtStart;
+    float conveyerAddition = 0f;
     bool isAlive = true;
     bool isPaused = false;
 
@@ -36,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if(!isAlive) {return;}
+        ConveyerBelt();        
         Run();
         FlipSprite();
         ClimbLadder();
@@ -70,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(!isAlive) {return;}
 
-        if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "RightConveyer", "LeftConveyer")))
         {
             return;
         }
@@ -94,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
     void Run() 
         {
             
-            Vector2 playerVelocity = new Vector2 (moveInput.x * playerSpeed, myRigidBody.velocity.y);
+            Vector2 playerVelocity = new Vector2 ((moveInput.x * playerSpeed) + conveyerAddition, myRigidBody.velocity.y);
             myRigidBody.velocity = playerVelocity;
 
             bool playerHasHorizontalSpeed = Mathf.Abs(myRigidBody.velocity.x) > Mathf.Epsilon;
@@ -118,14 +122,36 @@ public class PlayerMovement : MonoBehaviour
         if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"))) 
         { 
             myRigidBody.gravityScale = gravityScaleAtStart;
+            myAnimator.SetBool("IsClimbing", false);
             return;
         }
 
         Vector2 climbVelocity = new Vector2 (myRigidBody.velocity.x, moveInput.y * climbSpeed);
         myRigidBody.velocity = climbVelocity;
         myRigidBody.gravityScale = 0f;
+
+        bool playerHasVerticalSpeed = Mathf.Abs(myRigidBody.velocity.y) > Mathf.Epsilon;
+        myAnimator.SetBool("IsClimbing", playerHasVerticalSpeed);
         
     }
+
+    void ConveyerBelt()
+    {
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask("RightConveyer")))
+        {
+            conveyerAddition = conveyerSpeed;
+        }
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask("LeftConveyer")))
+        {
+            conveyerAddition = -conveyerSpeed;
+        }
+        else if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("RightConveyer", "LeftConveyer")))
+        {
+            conveyerAddition = 0;
+        }
+
+    }
+
 
     void Die()
     {
