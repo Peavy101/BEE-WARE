@@ -2,19 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameSession : MonoBehaviour
 {
 
     [SerializeField] int playerLives = 3;
+    [SerializeField] int score = 0;    
     [SerializeField] TextMeshProUGUI livesText;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI pauseText;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] TextMeshProUGUI totalScoreText;
     [SerializeField] TextMeshProUGUI scoreSignText;
-    [SerializeField] int score = 0;
+
+    // Barry text stuff here // 
+    [SerializeField] TextMeshProUGUI barryText;
+    [SerializeField] float timeBtwnChars;
+    [SerializeField] float timeBtwnWords;
+    public string[] stringArray;
+    int i = 0;
 
     float totalScore;
 
@@ -22,6 +30,10 @@ public class GameSession : MonoBehaviour
     float startingTime = 500f;
 
     bool timerStop = true;
+
+    public Image textBox;
+    public Image barryHead;
+    public Image img;
 
     void Awake()
     {
@@ -39,9 +51,15 @@ public class GameSession : MonoBehaviour
 
     void Start()
     {
+        img.enabled = false;
+        textBox.enabled = false;
+        barryHead.enabled = false;
         currentTime = startingTime;
-        livesText.text = playerLives.ToString();
+        livesText.text = ("");
         scoreText.text = ("");
+        barryText.text = ("");
+
+        EndCheck();
     }
 
     public void ResetTimer()
@@ -97,7 +115,6 @@ public class GameSession : MonoBehaviour
     public void AddToScore(int pointsToAdd)
     {
         score += pointsToAdd;
-        Debug.Log(score);
         scoreText.text = score.ToString();
     }
 
@@ -134,4 +151,42 @@ public class GameSession : MonoBehaviour
         scoreSignText.text = ("-Score-");
     }
 
+    public void StartLives()
+    {
+        img.enabled = true;
+        livesText.text = playerLives.ToString();
+    }
+
+    private IEnumerator TextVisible()
+    {
+        barryText.ForceMeshUpdate(); 
+        int totalVisibleCharacters = barryText.textInfo.characterCount;
+        int counter = 0;
+
+        while (true)
+        {
+            barryText.ForceMeshUpdate();
+            int visibleCount = counter % (totalVisibleCharacters + 1);
+            barryText.maxVisibleCharacters = visibleCount;
+
+            if(visibleCount >= totalVisibleCharacters)
+            {
+                i += 1;
+                Invoke("EndCheck", timeBtwnWords);
+                break;
+            }
+
+            counter += 1;
+            yield return new WaitForSeconds(timeBtwnChars);
+        }
+    }
+
+    void EndCheck()
+    {
+        if(i< stringArray.Length - 1)
+        {
+            barryText.text = stringArray[i];
+            StartCoroutine(TextVisible());
+        }
+    }
 }

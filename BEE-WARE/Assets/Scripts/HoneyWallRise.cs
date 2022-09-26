@@ -10,12 +10,12 @@ public class HoneyWallRise : MonoBehaviour
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
+    }
+
+    
+    public void HoneyStart()
+    {
         myRigidBody.velocity = new Vector2 (0f, honeySpeed);
     }
 
-
-    void Update()
-    {
-        
-    }
 }

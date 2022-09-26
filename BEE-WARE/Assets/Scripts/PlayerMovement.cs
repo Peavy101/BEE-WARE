@@ -172,4 +172,17 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+    public void BarryIsShaking()
+    {
+        isAlive = false;
+        myAnimator.SetTrigger("Shake");
+    }
+
+    public void BarryIsNotShaking()
+    {
+        isAlive = true;
+        myAnimator.SetTrigger("NotShake");
+    }
+
+
 }
